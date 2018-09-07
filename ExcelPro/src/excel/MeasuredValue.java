@@ -33,7 +33,6 @@ public class MeasuredValue {
 	}
 	public MeasuredValue() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	public MeasuredValue(String value, String type, Date date, String unit) {
 		super();

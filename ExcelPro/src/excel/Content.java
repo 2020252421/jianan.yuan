@@ -24,7 +24,6 @@ public class Content {
 	}
 	public Content() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	public Content(String title, String conclusion, Table[] tables) {
 		super();

@@ -15,7 +15,7 @@ import excel.Point;
 
 public class ExcelUtuil {
 	public static HSSFWorkbook readExcel(String path,String fileName) {
-		File file = new File(path,fileName);
+		File file = new File(path+fileName);
 		HSSFWorkbook workbook = null;
 		InputStream inputStream = null;
 		try {

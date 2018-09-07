@@ -33,7 +33,6 @@ public class Cover {
 	}
 	public Cover() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	public Cover(String title, String version, Date date, String owner) {
 		super();
