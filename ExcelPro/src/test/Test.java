@@ -12,5 +12,6 @@ public class Test {
 		for (int i = 1; i < 17; i++) {
 			ExcelUtuil.getPoint(i, workbook, "ÁÑ·ìË®Æ½");
 		}
+		ExcelUtuil.refreshSheet(path, fileName);
 	}
 }
