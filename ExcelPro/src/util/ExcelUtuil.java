@@ -10,11 +10,14 @@ import java.io.OutputStream;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFChart.HSSFChartType;
 import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 import excel.MeasuredValue;
@@ -100,30 +103,35 @@ public class ExcelUtuil {
 	public static HSSFSheet genrateCover(HSSFSheet sheet) {
 		sheet.addMergedRegion(new CellRangeAddress(0, 49, 0, 8));
 		//合并单元格CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
-		HSSFRow row = sheet.createRow(0);//创建HSSFrow对象
+		HSSFRow row = sheet.createRow(0);//建HSSFrow对象
 		HSSFCell coverCell = row .createCell(0);//创建HSSFCell对象
 		HSSFCellStyle cellStyle = sheet.getWorkbook().createCellStyle();//设置单元格样式
 		cellStyle.setAlignment(HorizontalAlignment.CENTER);//设置居中对齐格式
+		cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		HSSFFont font1 = sheet.getWorkbook().createFont();//创建HSSFFont对象
 		font1.setFontHeightInPoints((short)20);//设置字体大小
 		font1.setFontName("宋体");//设置字体格式
 		font1.setBold(true);//设置粗体
 		cellStyle.setFont(font1);//将字体设置进去
 		cellStyle.setWrapText(true);//设置自动换行
-		String value1 = "舟山新城金鸡山单元LC-09-02-10(B)地块住宅项目基坑开挖监测日报";
 		coverCell.setCellStyle(cellStyle);//将单元格设置进去
 		HSSFFont font2 = sheet.getWorkbook().createFont();
 		font2.setFontHeightInPoints((short)18);
 		font2.setFontName("宋体");
 		cellStyle.setFont(font2);
-		String value2 = "第（2）期";
 		HSSFFont font3 = sheet.getWorkbook().createFont();
 		font3.setFontHeightInPoints((short)20);
 		font3.setFontName("宋体");
-		font3.setBold(true);
 		cellStyle.setFont(font3);
-		String value3 = "核工业湖州工程勘察院"+"\n"+"2018年04月17日";
-		coverCell.setCellValue( "\n\n\n\n"+value1+"\n\n\n\n\n\n\n\n"+value2+"\n\n\n\n\n\n\n\n\n"+value3);
+		HSSFRichTextString tString = new HSSFRichTextString(
+				"\n\n"+
+				"舟山新城金鸡山单元LC-09-02-10(B)地块住宅项目基坑开挖监测日报"+"\n\n\n\n\n\n\n\n\n"+
+				"第（ 2 ）期"+"\n\n\n\n\n\n\n\n\n\n\n\n"+"核工业湖州工程勘察院"+ 
+				"\n"+"2018年04月17日"+"\n\n");
+		tString.applyFont(0, 40, font1);
+		tString.applyFont(41, 55, font2);
+		tString.applyFont(60, 90, font3);
+		coverCell.setCellValue(tString);
 		coverCell.setCellStyle(cellStyle);
 		return sheet;
 	}
