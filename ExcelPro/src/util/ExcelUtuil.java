@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -19,8 +20,10 @@ import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 
+import excel.Cover;
 import excel.MeasuredValue;
 import excel.Point;
+import excel.Table;
 
 public class ExcelUtuil {
 	public static HSSFWorkbook readExcel(String path,String fileName) {
@@ -32,8 +35,11 @@ public class ExcelUtuil {
 			workbook = new HSSFWorkbook(inputStream);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}catch (IOException e) {
+			System.out.println("文件找不到");
+		} catch (IOException e) {
 			e.printStackTrace();
+		}finally {
+			System.out.println("finally");
 		}
 		if(workbook!=null) {
 			System.out.println("读取excel成功！");
@@ -48,7 +54,7 @@ public class ExcelUtuil {
 			workbook = new HSSFWorkbook(inputStream);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		if(workbook!=null) {
@@ -69,7 +75,7 @@ public class ExcelUtuil {
 		point.setName(row.getCell(0).toString());
 		point.setDatas(datas);
 		point.setComments(row.getCell(6).toString());
-		System.out.println(point);
+		System.out.println(point.toString());
 		return point;
 	}
 	public static void refreshSheet(String path,String fileName) {
@@ -81,6 +87,16 @@ public class ExcelUtuil {
 		}
 		sheet= workbook.createSheet("output");
 		genrateCover(sheet);
+		Table table = new Table();
+		table.setTitle("一、裂缝水平位移监测成果表");
+		String[] headers = {"编号","本次位移（mm/d)","累计偏移（mm）","备注"};
+		table.setHeaders(headers);
+		Point[] points = new Point[16];
+		for (int i = 1; i < 17; i++) {
+			points[i-1] = getPoint(i, workbook, "裂缝水平");
+		}
+		table.setPoints(points);
+		generateTable(sheet, table);
 		OutputStream outputStream = null;
 		try {
 			outputStream = new FileOutputStream(xlsFile);
@@ -106,7 +122,6 @@ public class ExcelUtuil {
 		HSSFCell coverCell = row .createCell(0);//创建HSSFCell对象
 		HSSFCellStyle cellStyle = sheet.getWorkbook().createCellStyle();//设置单元格样式
 		cellStyle.setAlignment(HorizontalAlignment.CENTER);//设置居中对齐格式
-		cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		HSSFFont font1 = sheet.getWorkbook().createFont();//创建HSSFFont对象
 		font1.setFontHeightInPoints((short)20);//设置字体大小
 		font1.setFontName("宋体");//设置字体格式
@@ -122,16 +137,58 @@ public class ExcelUtuil {
 		font3.setFontHeightInPoints((short)20);
 		font3.setFontName("宋体");
 		cellStyle.setFont(font3);
-		HSSFRichTextString tString = new HSSFRichTextString(
-				"\n\n"+
-				"舟山新城金鸡山单元LC-09-02-10(B)地块住宅项目基坑开挖监测日报"+"\n\n\n\n\n\n\n\n\n"+
-				"第（ 2 ）期"+"\n\n\n\n\n\n\n\n\n\n\n\n"+"核工业湖州工程勘察院"+ 
-				"\n"+"2018年04月17日"+"\n\n");
-		tString.applyFont(0, 40, font1);
-		tString.applyFont(41, 55, font2);
-		tString.applyFont(60, 90, font3);
-		coverCell.setCellValue(tString);
+		HSSFFont font4 = sheet.getWorkbook().createFont();
+		font4.setFontHeightInPoints((short)24);
+		font4.setFontName("宋体");
+		cellStyle.setFont(font4);
+		Cover cover = new Cover();
+		cover.setTitle("舟山新城金鸡山单元LC-09-02-10(B)地块住宅项目基坑开挖监测日报");
+		cover.setVersion("第（ 2 ）期");
+		cover.setOwner("核工业湖州工程勘察院");
+		cover.setDate(new Date());
+		String coverContent = "";
+		coverContent = cover.getTitle()+FormatUtil.getLineBreak(8)+cover.getVersion()
+		+FormatUtil.getLineBreak(8)+cover.getOwner()+FormatUtil.getLineBreak(1)
+		+cover.getDate()+FormatUtil.getLineBreak(5);
+		HSSFRichTextString ts = new HSSFRichTextString(coverContent);
+		int start=0,end = cover.getTitle().length();
+		ts.applyFont(start, end, font1);
+		
+		start = end;
+		end = end+8;
+		ts.applyFont(start, end, font4);
+		
+		start = end;
+		end = end+cover.getVersion().length();
+		ts.applyFont(start, end, font2);
+		
+		start = end;
+		end = end+8;
+		ts.applyFont(start, end, font4);
+		
+		start = end;
+		end = end+cover.getOwner().length()+1+cover.getDate().toString().length();
+		ts.applyFont(start, end, font3);
+		
+		coverCell.setCellValue(ts);
 		coverCell.setCellStyle(cellStyle);
+		return sheet;
+	}
+	public static HSSFSheet generateTable(HSSFSheet sheet,Table table) {
+		sheet.addMergedRegion(new CellRangeAddress(51, 51, 0, 7));
+		HSSFRow row = sheet.createRow(51);
+		row.setHeight((short)(34*20));
+		HSSFCell tableHeader = row.createCell(0);
+		HSSFCellStyle tableHeaderStyle = sheet.getWorkbook().createCellStyle();
+		HSSFFont tableHeaderFont = sheet.getWorkbook().createFont();
+		tableHeaderFont.setBold(true);
+		tableHeaderFont.setFontName("宋体");
+		tableHeaderFont.setFontHeightInPoints((short)14);;
+		tableHeaderStyle.setFont(tableHeaderFont);
+		tableHeaderStyle.setAlignment(HorizontalAlignment.CENTER);
+		tableHeaderStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		tableHeader.setCellStyle(tableHeaderStyle);
+		tableHeader.setCellValue(table.getTitle());
 		return sheet;
 	}
 }
