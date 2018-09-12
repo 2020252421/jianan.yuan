@@ -183,7 +183,7 @@ public class ExcelUtuil {
 		HSSFFont tableHeaderFont = sheet.getWorkbook().createFont();
 		tableHeaderFont.setBold(true);
 		tableHeaderFont.setFontName("ËÎÌו");
-		tableHeaderFont.setFontHeightInPoints((short)14);;
+		tableHeaderFont.setFontHeightInPoints((short)14);
 		tableHeaderStyle.setFont(tableHeaderFont);
 		tableHeaderStyle.setAlignment(HorizontalAlignment.CENTER);
 		tableHeaderStyle.setVerticalAlignment(VerticalAlignment.CENTER);
