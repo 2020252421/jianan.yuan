@@ -16,6 +16,7 @@ import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -189,6 +190,55 @@ public class ExcelUtuil {
 		tableHeaderStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		tableHeader.setCellStyle(tableHeaderStyle);
 		tableHeader.setCellValue(table.getTitle());
+		
+		HSSFCellStyle tableContentStyle = sheet.getWorkbook().createCellStyle();
+		HSSFFont tableContentFont = sheet.getWorkbook().createFont();
+		tableContentFont.setFontName("ËÎÌו");
+		tableContentFont.setFontHeightInPoints((short)11);
+		tableContentStyle.setFont(tableContentFont);
+		tableContentStyle.setWrapText(true);
+		tableContentStyle.setBorderBottom(BorderStyle.THIN);
+		tableContentStyle.setBorderLeft(BorderStyle.THIN);
+		tableContentStyle.setBorderTop(BorderStyle.THIN);
+		tableContentStyle.setBorderRight(BorderStyle.THIN);
+		HSSFCell  cell =null;
+		int startRow = 52;
+		int currentRow = startRow;
+		HSSFRow[] tableRows = new HSSFRow[table.getPoints().length/2+1];
+		HSSFCell[][] pointCells = new HSSFCell[table.getPoints().length][4];
+		for (int i = 0; i <= table.getPoints().length/2; i++) {
+			tableRows[i] = sheet.createRow(currentRow);
+			tableRows[i].setHeight((short)(34*20));
+			if(i==0) {
+				for (int j = 0; j < 8; j++) {
+					cell=tableRows[i].createCell(j);
+					cell.setCellStyle(tableContentStyle);
+					if(j<4) {
+					cell.setCellValue(table.getHeaders()[j]);;
+				}else {
+					cell.setCellValue(table.getHeaders()[j-4]);
+				}
+			}
+			}else {
+				for (int j = 0; j < 4; j++) {
+					tableRows[i].createCell(j);
+					tableRows[i].getCell(j).setCellStyle(tableContentStyle);
+					pointCells[i][j] = tableRows[i].getCell(j);
+					tableRows[i].createCell(j+4);
+					tableRows[i].getCell(j+4).setCellStyle(tableContentStyle);
+					pointCells[i+pointCells.length/2-1][j] = tableRows[i].getCell(j+4);
+				}
+			}
+			currentRow++;
+		}
+		for (int i = 0; i < table.getPoints().length; i++) {
+			if(pointCells[i][0]!=null) {
+				pointCells[i][0].setCellValue(table.getPoints()[i].getName());
+				pointCells[i][1].setCellValue(table.getPoints()[i].getDatas()[2].getValue());
+				pointCells[i][2].setCellValue(table.getPoints()[i].getDatas()[4].getValue());
+				pointCells[i][3].setCellValue(table.getPoints()[i].getComments());
+			}
+		}
 		return sheet;
 	}
 }
