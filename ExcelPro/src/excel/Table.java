@@ -31,4 +31,6 @@ public class Table {
 		this.headers = headers;
 		this.points = points;
 	}
+
+	
 }

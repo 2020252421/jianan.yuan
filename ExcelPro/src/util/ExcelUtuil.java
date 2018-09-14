@@ -23,8 +23,11 @@ import org.apache.poi.ss.util.CellRangeAddress;
 
 import excel.Cover;
 import excel.MeasuredValue;
+import excel.MeasuredValue2;
 import excel.Point;
+import excel.Point2;
 import excel.Table;
+import excel.Table2;
 
 public class ExcelUtuil {
 	public static HSSFWorkbook readExcel(String path,String fileName) {
@@ -79,25 +82,53 @@ public class ExcelUtuil {
 		System.out.println(point.toString());
 		return point;
 	}
+	public static Point2 getPoint2(int pointNum,HSSFWorkbook workbook,String sheetName ) {
+		HSSFSheet sheet = workbook.getSheet(sheetName);
+		HSSFRow row = sheet.getRow(pointNum);
+		Point2 point2 = new Point2();
+		MeasuredValue2[] datas2 = new MeasuredValue2[6];
+		for (int i = 0; i < 6; i++) {
+			MeasuredValue2 measuredValue2 = new MeasuredValue2();
+			measuredValue2.setValue2(row.getCell(i+1).toString());
+			datas2[i] = measuredValue2;
+		}
+		point2.setName2(row.getCell(4).toString());
+		point2.setDatas2(datas2);
+		point2.setComments2(row.getCell(7).toString());
+		System.out.println(point2.toString());
+		return point2;
+	}
 	public static void refreshSheet(String path,String fileName) {
 		File xlsFile = new File(path+fileName);
 		HSSFWorkbook workbook = readExcel(xlsFile);
-		HSSFSheet sheet = workbook.getSheet("output");
+		HSSFSheet sheet = workbook.getSheet(FormatUtil.OUTPUTSHEETNAME);
 		if(sheet!=null) {
 			workbook.removeSheetAt(workbook.getSheetIndex(sheet.getSheetName()));
 		}
-		sheet= workbook.createSheet("output");
+		sheet= workbook.createSheet(FormatUtil.OUTPUTSHEETNAME);
 		genrateCover(sheet);
 		Table table = new Table();
-		table.setTitle("一、裂缝水平位移监测成果表");
-		String[] headers = {"编号","本次位移（mm/d)","累计偏移（mm）","备注"};
+		table.setTitle(FormatUtil.TABLETITLE);
+		String[] headers = {FormatUtil.HEADER1,FormatUtil.HEADER2,FormatUtil.HEADER3,FormatUtil.HEADER4};
 		table.setHeaders(headers);
 		Point[] points = new Point[16];
-		for (int i = 1; i < 17; i++) {
-			points[i-1] = getPoint(i, workbook, "裂缝水平");
+			for (int i = 1; i < 17; i++) {
+			points[i-1] = getPoint(i, workbook, FormatUtil.SHEETNAME);
 		}
-		table.setPoints(points);
+			table.setPoints(points);
+			
+			
+	    Table2 table2 = new Table2();
+	    table2.setTitle2(FormatUtil.TABLETITLE2);
+		String[] headers2 = {FormatUtil.HEADER1,FormatUtil.HEADER2,FormatUtil.HEADER3,FormatUtil.HEADER4};
+		table2.setHeaders2(headers2);
+		Point2[] points2 = new Point2[6];
+			for (int i = 11; i < 17; i++) {
+			points2[i-1] = getPoint2(i, workbook, FormatUtil.SHEETNAME2);
+		}
+			table2.setPoints2(points2);
 		generateTable(sheet, table);
+		generateTable2(sheet, table2);
 		OutputStream outputStream = null;
 		try {
 			outputStream = new FileOutputStream(xlsFile);
@@ -125,27 +156,27 @@ public class ExcelUtuil {
 		cellStyle.setAlignment(HorizontalAlignment.CENTER);//设置居中对齐格式
 		HSSFFont font1 = sheet.getWorkbook().createFont();//创建HSSFFont对象
 		font1.setFontHeightInPoints((short)20);//设置字体大小
-		font1.setFontName("宋体");//设置字体格式
+		font1.setFontName(FormatUtil.FONTNAME);//设置字体格式
 		font1.setBold(true);//设置粗体
 		cellStyle.setFont(font1);//将字体设置进去
 		cellStyle.setWrapText(true);//设置自动换行
 		coverCell.setCellStyle(cellStyle);//将单元格设置进去
 		HSSFFont font2 = sheet.getWorkbook().createFont();
 		font2.setFontHeightInPoints((short)18);
-		font2.setFontName("宋体");
+		font2.setFontName(FormatUtil.FONTNAME);
 		cellStyle.setFont(font2);
 		HSSFFont font3 = sheet.getWorkbook().createFont();
 		font3.setFontHeightInPoints((short)20);
-		font3.setFontName("宋体");
+		font3.setFontName(FormatUtil.FONTNAME);
 		cellStyle.setFont(font3);
 		HSSFFont font4 = sheet.getWorkbook().createFont();
 		font4.setFontHeightInPoints((short)24);
-		font4.setFontName("宋体");
+		font4.setFontName(FormatUtil.FONTNAME);
 		cellStyle.setFont(font4);
 		Cover cover = new Cover();
-		cover.setTitle("舟山新城金鸡山单元LC-09-02-10(B)地块住宅项目基坑开挖监测日报");
-		cover.setVersion("第（ 2 ）期");
-		cover.setOwner("核工业湖州工程勘察院");
+		cover.setTitle(FormatUtil.COVERTITLE);
+		cover.setVersion(FormatUtil.COVERVERSION);
+		cover.setOwner(FormatUtil.COVEROWNER);
 		cover.setDate(new Date());
 		String coverContent = "";
 		coverContent = cover.getTitle()+FormatUtil.getLineBreak(8)+cover.getVersion()
@@ -183,7 +214,7 @@ public class ExcelUtuil {
 		HSSFCellStyle tableHeaderStyle = sheet.getWorkbook().createCellStyle();
 		HSSFFont tableHeaderFont = sheet.getWorkbook().createFont();
 		tableHeaderFont.setBold(true);
-		tableHeaderFont.setFontName("宋体");
+		tableHeaderFont.setFontName(FormatUtil.FONTNAME);
 		tableHeaderFont.setFontHeightInPoints((short)14);
 		tableHeaderStyle.setFont(tableHeaderFont);
 		tableHeaderStyle.setAlignment(HorizontalAlignment.CENTER);
@@ -193,7 +224,7 @@ public class ExcelUtuil {
 		
 		HSSFCellStyle tableContentStyle = sheet.getWorkbook().createCellStyle();
 		HSSFFont tableContentFont = sheet.getWorkbook().createFont();
-		tableContentFont.setFontName("宋体");
+		tableContentFont.setFontName(FormatUtil.FONTNAME);
 		tableContentFont.setFontHeightInPoints((short)11);
 		tableContentStyle.setFont(tableContentFont);
 		tableContentStyle.setWrapText(true);
@@ -203,41 +234,104 @@ public class ExcelUtuil {
 		tableContentStyle.setBorderRight(BorderStyle.THIN);
 		HSSFCell  cell =null;
 		int startRow = 52;
-		int currentRow = startRow;
-		HSSFRow[] tableRows = new HSSFRow[table.getPoints().length/2+1];
-		HSSFCell[][] pointCells = new HSSFCell[table.getPoints().length][4];
-		for (int i = 0; i <= table.getPoints().length/2; i++) {
-			tableRows[i] = sheet.createRow(currentRow);
-			tableRows[i].setHeight((short)(34*20));
-			if(i==0) {
-				for (int j = 0; j < 8; j++) {
-					cell=tableRows[i].createCell(j);
-					cell.setCellStyle(tableContentStyle);
-					if(j<4) {
-					cell.setCellValue(table.getHeaders()[j]);;
-				}else {
-					cell.setCellValue(table.getHeaders()[j-4]);
-				}
-			}
+		HSSFRow headRow = sheet.createRow(startRow);
+		headRow.setHeight((short)(34*20));
+		for (int i = 0; i < 8; i++) {
+			cell=headRow.createCell(i);
+			cell.setCellStyle(tableContentStyle);
+			if(i<4) {
+				cell.setCellValue(table.getHeaders()[i]);
 			}else {
-				for (int j = 0; j < 4; j++) {
-					tableRows[i].createCell(j);
-					tableRows[i].getCell(j).setCellStyle(tableContentStyle);
-					pointCells[i][j] = tableRows[i].getCell(j);
-					tableRows[i].createCell(j+4);
-					tableRows[i].getCell(j+4).setCellStyle(tableContentStyle);
-					pointCells[i+pointCells.length/2-1][j] = tableRows[i].getCell(j+4);
+				cell.setCellValue(table.getHeaders()[i-4]);
+			}
+		}
+		startRow++;
+		HSSFCell temCell = null;
+		for (int i = 0; i < table.getPoints().length; i++) {
+			if(i<FormatUtil.getRowNumByPoint(table.getPoints().length)) {
+				HSSFRow newRow = sheet.createRow(startRow+i);
+				newRow.setHeight((short)(34*20));
+				for (int c = 0; c < 4; c++) {
+					temCell =newRow.createCell(c);
+					temCell.setCellValue(table.getPoints()[i].getFillValue(c));
+					temCell.setCellStyle(tableContentStyle);
+				}
+				
+			}else {
+				for (int c =4; c < 8; c++) {
+					temCell=sheet.getRow(startRow+i-FormatUtil
+							.getRowNumByPoint(table.getPoints().length))
+							.createCell(c);
+					temCell.setCellValue(table.getPoints()[i].getFillValue(c-4));
+					temCell.setCellStyle(tableContentStyle);
 				}
 			}
-			currentRow++;
+				
 		}
-		for (int i = 0; i < table.getPoints().length; i++) {
-			if(pointCells[i][0]!=null) {
-				pointCells[i][0].setCellValue(table.getPoints()[i].getName());
-				pointCells[i][1].setCellValue(table.getPoints()[i].getDatas()[2].getValue());
-				pointCells[i][2].setCellValue(table.getPoints()[i].getDatas()[4].getValue());
-				pointCells[i][3].setCellValue(table.getPoints()[i].getComments());
+		return sheet;
+	}
+	public static HSSFSheet generateTable2(HSSFSheet sheet,Table2 table2) {
+		sheet.addMergedRegion(new CellRangeAddress(68, 68, 0, 8));
+		HSSFRow row = sheet.createRow(68);
+		row.setHeight((short)(34*20));
+		HSSFCell tableHeader = row.createCell(0);
+		HSSFCellStyle tableHeaderStyle = sheet.getWorkbook().createCellStyle();
+		HSSFFont tableHeaderFont = sheet.getWorkbook().createFont();
+		tableHeaderFont.setBold(true);
+		tableHeaderFont.setFontName(FormatUtil.FONTNAME);
+		tableHeaderFont.setFontHeightInPoints((short)14);
+		tableHeaderStyle.setFont(tableHeaderFont);
+		tableHeaderStyle.setAlignment(HorizontalAlignment.CENTER);
+		tableHeaderStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		tableHeader.setCellStyle(tableHeaderStyle);
+		tableHeader.setCellValue(table2.getTitle2());
+		
+		
+		HSSFCellStyle tableContentStyle = sheet.getWorkbook().createCellStyle();
+		HSSFFont tableContentFont = sheet.getWorkbook().createFont();
+		tableContentFont.setFontName(FormatUtil.FONTNAME);
+		tableContentFont.setFontHeightInPoints((short)11);
+		tableContentStyle.setFont(tableContentFont);
+		tableContentStyle.setWrapText(true);
+		tableContentStyle.setBorderBottom(BorderStyle.THIN);
+		tableContentStyle.setBorderLeft(BorderStyle.THIN);
+		tableContentStyle.setBorderTop(BorderStyle.THIN);
+		tableContentStyle.setBorderRight(BorderStyle.THIN);
+		HSSFCell  cell =null;
+		int startRow = 69;
+		HSSFRow headRow = sheet.createRow(startRow);
+		headRow.setHeight((short)(34*20));
+		for (int i = 0; i < 3; i++) {
+			cell=headRow.createCell(i);
+			cell.setCellStyle(tableContentStyle);
+			if(i<3) {
+				cell.setCellValue(table2.getHeaders2()[i]);
+			}else {
+				cell.setCellValue(table2.getHeaders2()[i-3]);
 			}
+		}
+		startRow++;
+		HSSFCell temCell = null;
+		for (int i = 0; i < table2.getPoints2().length; i++) {
+			if(i<FormatUtil.getRowNumByPoint(table2.getPoints2().length)) {
+				HSSFRow newRow = sheet.createRow(startRow+i);
+				newRow.setHeight((short)(34*20));
+				for (int c = 0; c < 4; c++) {
+					temCell =newRow.createCell(c);
+					temCell.setCellValue(table2.getPoints2()[i].getFillValue(c));
+					temCell.setCellStyle(tableContentStyle);
+				}
+				
+			}else {
+				for (int c =4; c < 8; c++) {
+					temCell=sheet.getRow(startRow+i-FormatUtil
+							.getRowNumByPoint2(table2.getPoints2().length))
+							.createCell(c);
+					temCell.setCellValue(table2.getPoints2()[i].getFillValue(c-4));
+					temCell.setCellStyle(tableContentStyle);
+				}
+			}
+				
 		}
 		return sheet;
 	}

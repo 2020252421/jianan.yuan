@@ -40,6 +40,24 @@ public class Point {
 		}
 		return "name:" + getName() + values+" comments:" + getComments();
 	}
-	
+	public String getFillValue(int i) {
+		String fillValue="";
+		switch (i) {
+		case 0:
+			fillValue = getName();
+			break;
+		case 1:
+			fillValue = getDatas()[2].getValue();
+			break;
+		case 2:
+			fillValue = getDatas()[4].getValue();
+			break;
+		case 3:
+			fillValue = getComments();
+		default:
+			break;
+		}
+		return fillValue;
+	}
 	
 }
