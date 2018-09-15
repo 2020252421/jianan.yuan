@@ -13,8 +13,11 @@ public class Test {
 		for (int i = 1; i < 17; i++) {
 			ExcelUtuil.getPoint(i, workbook, FormatUtil.SHEETNAME);
 		}
-		for (int j = 1; j < 7; j++) {
-			ExcelUtuil.getPoint2(j+10, workbook, FormatUtil.SHEETNAME2);
+		for (int i = 1; i < 7; i++) {
+			ExcelUtuil.getPoint2(i+10, workbook, FormatUtil.SHEETNAME2);
+		}
+		for (int i = 1; i < 7 ; i++) {
+			ExcelUtuil.getPoint3(i+9, workbook, FormatUtil.SHEETNAME3);
 		}
 		ExcelUtuil.refreshSheet(path, fileName);
 	}

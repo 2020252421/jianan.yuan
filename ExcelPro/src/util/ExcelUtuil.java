@@ -24,10 +24,13 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import excel.Cover;
 import excel.MeasuredValue;
 import excel.MeasuredValue2;
+import excel.MeasuredValue3;
 import excel.Point;
 import excel.Point2;
+import excel.Point3;
 import excel.Table;
 import excel.Table2;
+import excel.Table3;
 
 public class ExcelUtuil {
 	public static HSSFWorkbook readExcel(String path,String fileName) {
@@ -98,6 +101,22 @@ public class ExcelUtuil {
 		System.out.println(point2.toString());
 		return point2;
 	}
+	public static Point3 getPoint3(int pointNum3,HSSFWorkbook workbook,String sheetName3 ) {
+		HSSFSheet sheet = workbook.getSheet(sheetName3);
+		HSSFRow row = sheet.getRow(pointNum3);
+		Point3 point3 = new Point3();
+		MeasuredValue3[] datas3 = new MeasuredValue3[8];
+		for (int i = 0; i < 8; i++) {
+					MeasuredValue3 measuredValue3 = new MeasuredValue3();
+					measuredValue3.setValue3(row.getCell(i+1).toString());
+			    datas3[i] = measuredValue3;
+		}
+		point3.setName3(row.getCell(0).toString());
+		point3.setDatas3(datas3);
+		point3.setComments3(row.getCell(9).toString());
+		System.out.println(point3.toString());
+		return point3;
+	}
 	public static void refreshSheet(String path,String fileName) {
 		File xlsFile = new File(path+fileName);
 		HSSFWorkbook workbook = readExcel(xlsFile);
@@ -124,11 +143,21 @@ public class ExcelUtuil {
 		 String[] headers2 = {FormatUtil.HEADER1,FormatUtil.HEADER2,FormatUtil.HEADER3,FormatUtil.HEADER4};
 		 table2.setHeaders2(headers2);
 		 Point2[] points2 = new Point2[6];
-				for (int j = 1; j < 7; j++) {
-				points2[j-1] = getPoint2(j+10, workbook, FormatUtil.SHEETNAME2);
+				for (int i = 1; i < 7; i++) {
+				points2[i-1] = getPoint2(i+10, workbook, FormatUtil.SHEETNAME2);
 			}
 				table2.setPoints2(points2);
 		generateTable2(sheet, table2);
+		Table3 table3 = new Table3();
+		 table3.setTitle3(FormatUtil.TABLETITLE3);
+		 String[] headers3 = {FormatUtil.HEADER1,FormatUtil.HEADER5,FormatUtil.HEADER6,FormatUtil.HEADER4};
+		 table3.setHeaders3(headers3);
+		 Point3[] points3 = new Point3[6];
+				for (int i = 1; i < 7; i++) {
+				points3[i-1] = getPoint3(i+9, workbook, FormatUtil.SHEETNAME3);
+			}
+				table3.setPoints3(points3);
+		generateTable3(sheet, table3);
 		OutputStream outputStream = null;
 		try {
 			outputStream = new FileOutputStream(xlsFile);
@@ -334,5 +363,71 @@ public class ExcelUtuil {
 				
 		}
 		return sheet;
+		}
+		public static HSSFSheet generateTable3(HSSFSheet sheet,Table3 table3) {
+			sheet.addMergedRegion(new CellRangeAddress(79, 79, 0, 8));
+			HSSFRow row = sheet.createRow(79);
+			row.setHeight((short)(34*20));
+			HSSFCell tableHeader = row.createCell(0);
+			HSSFCellStyle tableHeaderStyle = sheet.getWorkbook().createCellStyle();
+			HSSFFont tableHeaderFont = sheet.getWorkbook().createFont();
+			tableHeaderFont.setBold(true);
+			tableHeaderFont.setFontName(FormatUtil.FONTNAME);
+			tableHeaderFont.setFontHeightInPoints((short)14);
+			tableHeaderStyle.setFont(tableHeaderFont);
+			tableHeaderStyle.setAlignment(HorizontalAlignment.CENTER);
+			tableHeaderStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+			tableHeader.setCellStyle(tableHeaderStyle);
+			tableHeader.setCellValue(table3.getTitle3());
+			
+			
+			HSSFCellStyle tableContentStyle = sheet.getWorkbook().createCellStyle();
+			HSSFFont tableContentFont = sheet.getWorkbook().createFont();
+			tableContentFont.setFontName(FormatUtil.FONTNAME);
+			tableContentFont.setFontHeightInPoints((short)11);
+			tableContentStyle.setFont(tableContentFont);
+			tableContentStyle.setWrapText(true);
+			tableContentStyle.setBorderBottom(BorderStyle.THIN);
+			tableContentStyle.setBorderLeft(BorderStyle.THIN);
+			tableContentStyle.setBorderTop(BorderStyle.THIN);
+			tableContentStyle.setBorderRight(BorderStyle.THIN);
+			HSSFCell  cell =null;
+			int startRow = 80;
+			HSSFRow headRow = sheet.createRow(startRow);
+			headRow.setHeight((short)(34*20));
+			for (int i = 0; i < 8; i++) {
+				cell=headRow.createCell(i);
+				cell.setCellStyle(tableContentStyle);
+				if(i<4) {
+					cell.setCellValue(table3.getHeaders3()[i]);
+				}else {
+					cell.setCellValue(table3.getHeaders3()[i-4]);
+				}
+			}
+			startRow++;
+			HSSFCell temCell = null;
+			for (int i = 0; i < table3.getPoints3().length; i++) {
+				if(i<FormatUtil.getRowNumByPoint(table3.getPoints3().length)) {
+					HSSFRow newRow = sheet.createRow(startRow+i);
+					newRow.setHeight((short)(34*20));
+					for (int c = 0; c < 4; c++) {
+						temCell =newRow.createCell(c);
+						temCell.setCellValue(table3.getPoints3()[i].getFillValue(c));
+						temCell.setCellStyle(tableContentStyle);
+					}
+					
+				}else {
+					for (int c =4; c < 8; c++) {
+						temCell=sheet.getRow(startRow+i-FormatUtil
+								.getRowNumByPoint2(table3.getPoints3().length))
+								.createCell(c);
+						temCell.setCellValue(table3.getPoints3()[i].getFillValue(c-4));
+						temCell.setCellStyle(tableContentStyle);
+					}
+				}
+					
+			}
+			return sheet;
 	}
+	
 }

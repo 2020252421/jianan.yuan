@@ -3,7 +3,7 @@ package excel;
 public class Content2 {
 	private String title2;
 	private String conclusion2;
-	private Table2[] tables2;
+	private Table2[] tables2;	
 	public String getTitle2() {
 		return title2;
 	}
