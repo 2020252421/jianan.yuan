@@ -82,15 +82,15 @@ public class ExcelUtuil {
 		System.out.println(point.toString());
 		return point;
 	}
-	public static Point2 getPoint2(int pointNum,HSSFWorkbook workbook,String sheetName ) {
-		HSSFSheet sheet = workbook.getSheet(sheetName);
-		HSSFRow row = sheet.getRow(pointNum);
+	public static Point2 getPoint2(int pointNum2,HSSFWorkbook workbook,String sheetName2 ) {
+		HSSFSheet sheet = workbook.getSheet(sheetName2);
+		HSSFRow row = sheet.getRow(pointNum2);
 		Point2 point2 = new Point2();
 		MeasuredValue2[] datas2 = new MeasuredValue2[6];
 		for (int i = 0; i < 6; i++) {
-			MeasuredValue2 measuredValue2 = new MeasuredValue2();
+					MeasuredValue2 measuredValue2 = new MeasuredValue2();
 			measuredValue2.setValue2(row.getCell(i+1).toString());
-			datas2[i] = measuredValue2;
+			    datas2[i] = measuredValue2;
 		}
 		point2.setName2(row.getCell(4).toString());
 		point2.setDatas2(datas2);
@@ -107,6 +107,7 @@ public class ExcelUtuil {
 		}
 		sheet= workbook.createSheet(FormatUtil.OUTPUTSHEETNAME);
 		genrateCover(sheet);
+		
 		Table table = new Table();
 		table.setTitle(FormatUtil.TABLETITLE);
 		String[] headers = {FormatUtil.HEADER1,FormatUtil.HEADER2,FormatUtil.HEADER3,FormatUtil.HEADER4};
@@ -117,17 +118,16 @@ public class ExcelUtuil {
 		}
 			table.setPoints(points);
 			
-			
-	    Table2 table2 = new Table2();
-	    table2.setTitle2(FormatUtil.TABLETITLE2);
-		String[] headers2 = {FormatUtil.HEADER1,FormatUtil.HEADER2,FormatUtil.HEADER3,FormatUtil.HEADER4};
-		table2.setHeaders2(headers2);
-		Point2[] points2 = new Point2[6];
-			for (int i = 11; i < 17; i++) {
-			points2[i-1] = getPoint2(i, workbook, FormatUtil.SHEETNAME2);
-		}
-			table2.setPoints2(points2);
 		generateTable(sheet, table);
+		 Table2 table2 = new Table2();
+		 table2.setTitle2(FormatUtil.TABLETITLE2);
+		 String[] headers2 = {FormatUtil.HEADER1,FormatUtil.HEADER2,FormatUtil.HEADER3,FormatUtil.HEADER4};
+		 table2.setHeaders2(headers2);
+		 Point2[] points2 = new Point2[6];
+				for (int j = 1; j < 7; j++) {
+				points2[j-1] = getPoint2(j+10, workbook, FormatUtil.SHEETNAME2);
+			}
+				table2.setPoints2(points2);
 		generateTable2(sheet, table2);
 		OutputStream outputStream = null;
 		try {
@@ -301,13 +301,13 @@ public class ExcelUtuil {
 		int startRow = 69;
 		HSSFRow headRow = sheet.createRow(startRow);
 		headRow.setHeight((short)(34*20));
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 8; i++) {
 			cell=headRow.createCell(i);
 			cell.setCellStyle(tableContentStyle);
-			if(i<3) {
+			if(i<4) {
 				cell.setCellValue(table2.getHeaders2()[i]);
 			}else {
-				cell.setCellValue(table2.getHeaders2()[i-3]);
+				cell.setCellValue(table2.getHeaders2()[i-4]);
 			}
 		}
 		startRow++;

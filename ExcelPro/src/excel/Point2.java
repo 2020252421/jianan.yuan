@@ -24,7 +24,6 @@ public class Point2 {
 	}
 	public Point2() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	public Point2(String name2, MeasuredValue2[] datas2, String comments2) {
 		super();
@@ -46,10 +45,10 @@ public class Point2 {
 			fillValue = getName2();
 			break;
 		case 1:
-			fillValue = getDatas2()[5].getValue2();
+			fillValue = getDatas2()[4].getValue2();
 			break;
 		case 2:
-			fillValue = getDatas2()[6].getValue2();
+			fillValue = getDatas2()[5].getValue2();
 			break;
 		case 3:
 			fillValue = getComments2();
