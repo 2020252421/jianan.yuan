@@ -24,7 +24,6 @@ public class Point3 {
 	}
 	public Point3() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	public Point3(String name3, MeasuredValue3[] datas3, String comments3) {
 		super();
