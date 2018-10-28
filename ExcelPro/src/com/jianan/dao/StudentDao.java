@@ -43,7 +43,7 @@ public class StudentDao {
 		
 			return student;
 		}
-	public Student addStudent(String id,String cardNo,String name,String password,String prefession,String sex) {
+	public Student addStudent(Student student) {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
@@ -51,12 +51,12 @@ public class StudentDao {
 		String sql = "insert into t_student (id,cardNo,name,password,prefession,sex) values(?,?,?,?,?,?)";
 		try {
 			statement = connection.prepareStatement(sql);
-			statement.setString(1, id);
-			statement.setString(2, cardNo);
-			statement.setString(3, name);
-			statement.setString(4, password);
-			statement.setString(5,prefession );
-			statement.setString(6, sex);
+			statement.setString(1, student.getId());
+			statement.setString(2, student.getCardNo());
+			statement.setString(3, student.getName());
+			statement.setString(4, student.getPassword());
+			statement.setString(5, student.getPrefession() );
+			statement.setString(6, student.getSex());
 			statement.executeUpdate();
 		} catch(SQLException e) {
 			e.printStackTrace();

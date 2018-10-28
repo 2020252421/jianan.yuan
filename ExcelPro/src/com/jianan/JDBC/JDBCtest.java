@@ -105,7 +105,13 @@ public class JDBCtest {
 	public static void main(String[] args) {
 		StudentDao dao = new StudentDao();
 		Student student = new Student();
-		//student = dao.addStudent("1714010729", "12345", "苑佳楠", "10000", "软件工程", "女");
+		student.setId("1714010729");
+		student.setCardNo("12345");
+		student.setName("苑佳楠");
+		student.setPassword("11111");
+		student.setPrefession("软件");
+		student.setSex("女");
+		//student = dao.addStudent(student);
 		student = dao.getStudentById("1714010729");
 		System.out.println(student);
 		
