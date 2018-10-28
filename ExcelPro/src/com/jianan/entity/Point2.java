@@ -1,4 +1,4 @@
-package excel;
+package com.jianan.entity;
 
 public class Point2 {
 	private String name2;

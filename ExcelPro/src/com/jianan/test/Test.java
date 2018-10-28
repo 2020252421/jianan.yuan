@@ -1,9 +1,9 @@
-package test;
+package com.jianan.test;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
-import util.ExcelUtuil;
-import util.FormatUtil;
+import com.jianan.util.ExcelUtuil;
+import com.jianan.util.FormatUtil;
 
 public class Test {
 	public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package util;
+package com.jianan.util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,16 +21,16 @@ import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 
-import excel.Cover;
-import excel.MeasuredValue;
-import excel.MeasuredValue2;
-import excel.MeasuredValue3;
-import excel.Point;
-import excel.Point2;
-import excel.Point3;
-import excel.Table;
-import excel.Table2;
-import excel.Table3;
+import com.jianan.entity.Cover;
+import com.jianan.entity.MeasuredValue;
+import com.jianan.entity.MeasuredValue2;
+import com.jianan.entity.MeasuredValue3;
+import com.jianan.entity.Point;
+import com.jianan.entity.Point2;
+import com.jianan.entity.Point3;
+import com.jianan.entity.Table;
+import com.jianan.entity.Table2;
+import com.jianan.entity.Table3;
 
 public class ExcelUtuil {
 	public static HSSFWorkbook readExcel(String path,String fileName) {

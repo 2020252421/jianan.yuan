@@ -1,4 +1,4 @@
-package util;
+package com.jianan.util;
 
 public class FormatUtil {
 	public static final String OUTPUTSHEETNAME = "output";
